@@ -7,7 +7,11 @@ const newsCategories = () =>{
 }
 
 const displayNewsCategories = (categories) =>{
-    console.log(categories);
+    // console.log(categories);
+    categories.forEach( category => {
+        console.log(category.category_name);
+        
+    });
 }
 
 newsCategories();
