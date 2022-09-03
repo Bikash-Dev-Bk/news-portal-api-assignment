@@ -49,7 +49,14 @@ const displayAllNewsInCategories = (allNews) =>{
     const allNewsCategoryContainer = document.getElementById('all-news-category');
     allNewsCategoryContainer.innerHTML = '';
 
-    
+    const newsItemContainer = document.getElementById('news-item');
+    newsItemContainer.innerHTML = '';
+
+    const newsItemDiv = document.createElement('div');
+    newsItemDiv.innerHTML = `
+        <p class="fs-4 border p-2"><span class="fw-bold">${allNews.length}</span> items found.</p>
+    `;
+    newsItemContainer.appendChild(newsItemDiv);
 
     allNews.forEach(news => {
         // console.log(news);
