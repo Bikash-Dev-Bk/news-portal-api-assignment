@@ -7,6 +7,7 @@ const newsCategories = () =>{
     .catch(error => console.log(error))
 }
 
+// display news categories
 const displayNewsCategories = (categories) =>{
 
     const newsCategoryContainer = document.getElementById('news-category');
@@ -15,7 +16,7 @@ const displayNewsCategories = (categories) =>{
         const newsCategoryDiv = document.createElement('div');
         newsCategoryDiv.classList.add('col');
         newsCategoryDiv.innerHTML = `
-        <p onclick="allNewsInCategories(${category.category_id})" class="fw-semibold">${category.category_name}</p>
+        <p onclick="loadAllNews(${category.category_id})" class="fw-semibold">${category.category_name}</p>
         `;
 
         newsCategoryContainer.appendChild(newsCategoryDiv);
@@ -27,24 +28,18 @@ newsCategories();
 
 
 
-
-
-
-
 // all news
 
-const allNewsInCategories = (category_id) =>{
-    // console.log(category_id);
+const loadAllNews = (category_id) =>{
     const url = `https://openapi.programming-hero.com/api/news/category/0${category_id}`;
     fetch(url)
     .then(res => res.json())
-    .then(data => displayAllNewsInCategories(data.data))
+    .then(data => displayLoadAllNews(data.data))
     .catch(error => console.log(error))
 }
 
-
-const displayAllNewsInCategories = (allNews) =>{
-    console.log(allNews.length);
+// display all news 
+const displayLoadAllNews = (allNews) =>{
 
     const allNewsCategoryContainer = document.getElementById('all-news-category');
     allNewsCategoryContainer.innerHTML = '';
@@ -54,35 +49,34 @@ const displayAllNewsInCategories = (allNews) =>{
 
     const newsItemDiv = document.createElement('div');
     newsItemDiv.innerHTML = `
-        <p class="fs-4 border p-2"><span class="fw-bold">${allNews.length}</span> items found.</p>
+        <p class="fs-4 border p-2"><span class="fw-bold">${allNews.length}</span> news found.</p>
     `;
     newsItemContainer.appendChild(newsItemDiv);
 
     allNews.forEach(news => {
-        // console.log(news);
         const allNewsCategoryDiv = document.createElement('div');
-        allNewsCategoryDiv.classList.add('row')
+        allNewsCategoryDiv.classList.add('row');
         allNewsCategoryDiv.innerHTML = `
             <div class="col-md-4">
-                <img src="${news.image_url}" class="img-fluid rounded-start" alt="...">
+                <img src="${news.image_url
+                }" class="img-fluid rounded-start" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                
                     <div>
                         <div>
                             <h5 class="card-title">${news.title}</h5>
-                            <p class="card-text">${news.details}</p>
+                            <p class="card-text">${news.details.slice(0, 400)} ...</p>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col-md-5 d-flex align-items-center">
                                 <img src="${news.author.img}" style="max-width: 10%; " class="img-fluid  rounded-circle me-3" alt="">
-                                <p>${news.author.name}</p>
+                                <p>${news.author.name ? news.author.name : 'No data avilable'}</p>
                             </div>
-                            <p class="pb-0 col-md-6"><span class="me-2"><i class="fa-regular fa-eye"></i></span>${news.total_view}</p>
+                            <p class="pb-0 col-md-6"><span class="me-2"><i class="fa-regular fa-eye"></i></span>${news.total_view ? news.total_view : 'No data avilable'}</p>
                             <div class="col-md-1">
-                                <button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newsDetailModal"><i class="fa-solid fa-arrow-right"></i></button>
+                                <button onclick="loadNewsDetails('${news._id}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newsDetailModal"><i class="fa-solid fa-arrow-right"></i></button>
                             </div>
                         </div>
                     </div>
@@ -94,20 +88,45 @@ const displayAllNewsInCategories = (allNews) =>{
     });
 }
 
-allNewsInCategories('1');
+loadAllNews('1');
 
 
 
 
+// modal (news details)
+
+const loadNewsDetails = (news_id) =>{
+    const url = `https://openapi.programming-hero.com/api/news/${news_id}`;
+    fetch(url)
+    .then(res => res.json())
+    .then(data => displayNewsDetails(data.data[0]))
+    .catch(error => console.log(error))
+}
 
 
-// const loadNewsDetail = () =>{
-//     const url = `https://openapi.programming-hero.com/api/news/0282e0e58a5c404fbd15261f11c2ab6a`
-//     fetch(url)
-//     .then(res => res.json())
-//     .then(data => console.log(data))
-// }
+const displayNewsDetails = (newsDetails) =>{
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = '';
 
-// loadNewsDetail();
+    const modalTitle = document.getElementById('newsDetailModalLabel');
+    modalTitle.innerText = newsDetails.title;
 
-// onclick="loadNewsDetail('${_id}')"
+    const modalDiv = document.createElement('div');
+    modalDiv.classList.add('card');
+    modalDiv.innerHTML = `
+        <img src="${newsDetails.image_url
+        }" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p>${newsDetails.details}</p>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6 d-flex justify-content-between align-items-center">
+                <img src="${newsDetails.author.img}" style="max-width: 20%; " class="img-fluid  rounded-circle me-3" alt="">
+                <p>${newsDetails.author.name ? newsDetails.author.name : 'No data avilable'}</p>
+                <p>${newsDetails.author.published_date ? newsDetails.author.published_date : 'No data avilable'}</p>
+            </div>
+            <p class="pb-0 col-md-6"><span class="me-2"><i class="fa-regular fa-eye"></i></span>${newsDetails.total_view ? newsDetails.total_view : 'No data avilable'}</p>
+        </div>
+    `;
+    modalBody.appendChild(modalDiv);
+}
