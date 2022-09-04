@@ -16,7 +16,7 @@ const displayNewsCategories = (categories) =>{
         const newsCategoryDiv = document.createElement('div');
         newsCategoryDiv.classList.add('col');
         newsCategoryDiv.innerHTML = `
-        <p onclick="loadAllNews(${category.category_id})" class="fw-semibold">${category.category_name}</p>
+        <p onclick="loadAllNews(${category.category_id}) ; toggleSpinner(true)" class="fw-semibold">${category.category_name}</p>
         `;
 
         newsCategoryContainer.appendChild(newsCategoryDiv);
@@ -49,7 +49,7 @@ const displayLoadAllNews = (allNews) =>{
 
     const newsItemDiv = document.createElement('div');
     newsItemDiv.innerHTML = `
-        <p class="fs-4 border p-2"><span class="fw-bold">${allNews.length}</span> news found.</p>
+        <p class="fs-4 border p-2 text-center"><span class="fw-bold">${allNews.length}</span> News found.</p>
     `;
     newsItemContainer.appendChild(newsItemDiv);
 
@@ -61,7 +61,7 @@ const displayLoadAllNews = (allNews) =>{
                 <img src="${news.image_url
                 }" class="img-fluid rounded-start" alt="...">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-5">
                 <div class="card-body">
                     <div>
                         <div>
@@ -86,6 +86,9 @@ const displayLoadAllNews = (allNews) =>{
 
         allNewsCategoryContainer.appendChild(allNewsCategoryDiv);
     });
+
+    // spiiner end
+    toggleSpinner(false);
 }
 
 loadAllNews('1');
@@ -129,4 +132,17 @@ const displayNewsDetails = (newsDetails) =>{
         </div>
     `;
     modalBody.appendChild(modalDiv);
+}
+
+
+// spinner function
+
+const toggleSpinner = isLoading => {
+    const spinnerSection = document.getElementById('spinner');
+    if(isLoading){
+        spinnerSection.classList.remove('d-none');
+    }
+    else{
+        spinnerSection.classList.add('d-none');
+    }
 }
