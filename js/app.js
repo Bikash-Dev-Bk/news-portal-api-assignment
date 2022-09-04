@@ -26,8 +26,6 @@ const displayNewsCategories = (categories) =>{
 newsCategories();
 
 
-
-
 // all news
 
 const loadAllNews = (category_id) =>{
@@ -40,6 +38,11 @@ const loadAllNews = (category_id) =>{
 
 // display all news 
 const displayLoadAllNews = (allNews) =>{
+    
+    // news sort
+    allNews.sort((a,b) => {
+        return b.total_view - a.total_view;
+    })
 
     const allNewsCategoryContainer = document.getElementById('all-news-category');
     allNewsCategoryContainer.innerHTML = '';
@@ -94,8 +97,6 @@ const displayLoadAllNews = (allNews) =>{
 loadAllNews('1');
 
 
-
-
 // modal (news details)
 
 const loadNewsDetails = (news_id) =>{
@@ -106,6 +107,7 @@ const loadNewsDetails = (news_id) =>{
     .catch(error => console.log(error))
 }
 
+// modal display(news details)
 
 const displayNewsDetails = (newsDetails) =>{
     const modalBody = document.getElementById('modal-body');
